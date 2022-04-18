@@ -7,7 +7,7 @@ pipeline{
     stage('codecheckout'){
       steps{
         sh  "echo cloning the latest applications version"
-        git 'https://github.com/Landmark-Finetech/maven-web-application.git'
+        git 'https://github.com/Funviv/maven-web-application.git'
       }
     }
     stage('TestBuild'){
@@ -24,12 +24,7 @@ pipeline{
         sh  "mvn sonar:sonar"  
       }
     }
-   stage('upLoadArtifacts'){
-   steps{
-   sh  "echo upLoadArtifacts into nexus"
-   sh  "mvn deploy"  
-      }      
-    }
+   
     stage('message'){
       steps{
         sh "echo CI job successful"
@@ -37,8 +32,8 @@ pipeline{
     }
     stage('predeployment'){
         steps{
-          sh "docker build -t kidunnu/maven-web-app . "
-          sh "docker push kidunnu/maven-web-app:latest"
+          sh "docker build -t funkvian/maven-web-app . "
+          sh "docker push funkvian/maven-web-app:latest"
         }
       }    
   stage('UnDeploy'){
@@ -50,20 +45,10 @@ pipeline{
 stage('Predeployment'){ 
         steps{ 
         sh "echo Build docker image" 
-        sh "docker rm -f myapp"
-        sh "docker rm -f kidunnu/maven-web-app:latest"
-        sh "docker rmi -f kidunnu/maven-web-app:latest"
-        sh "docker build -t kidunnu/maven-web-app:latest ."
-        sh "docker push kidunnu/maven-web-app:latest"
-        sh "docker run --name myapp -d -p 8888:8080 joveluro/maven-web-app:latest"
-        sh "aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 137620357192.dkr.ecr.us-east-2.amazonaws.com"
-        sh "docker tag maven-web-app:latest 137620357192.dkr.ecr.us-east-2.amazonaws.com/maven-web-app:latest"
-        sh "docker push 137620357192.dkr.ecr.us-east-2.amazonaws.com/maven-web-app:latest"
+        sh "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 656623980971.dkr.ecr.us-east-1.amazonaws.com"
+        sh "docker build -t myecr ."
+        sh "docker tag myecr:latest 656623980971.dkr.ecr.us-east-1.amazonaws.com/myecr:latest"
+        sh "docker push 656623980971.dkr.ecr.us-east-1.amazonaws.com/myecr:latest"
         } 
        } 
-    stage('7. Slack Notification'){
-        steps{
-        sh "echo Start of Email Notification"
-        slackSend channel: 'cicd-projects', message: 'Build Success'
-    }
-    }
+    
