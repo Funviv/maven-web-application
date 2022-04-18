@@ -51,3 +51,4 @@ stage('Predeployment'){
         sh "docker push 656623980971.dkr.ecr.us-east-1.amazonaws.com/myecr:latest"
         } 
        } 
+}
