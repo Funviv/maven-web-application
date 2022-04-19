@@ -32,7 +32,7 @@ pipeline{
     }
     stage('predeployment'){
         steps{
-          sh " withCredentials([string(credentialsId: '', variable: 'dockercredential')]) {
+          sh " withCredentials(string(credentialsId: '', variable: 'dockercredential')) {
           sh "docker build -t funkvian/maven-web-app . "
           sh "docker push funkvian/maven-web-app:latest"
    }
